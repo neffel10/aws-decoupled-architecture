@@ -1,0 +1,14 @@
+services:
+  api:
+    build: .
+    container_name: api-rds
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: 3000
+      DB_HOST: "mi-db-postgres.cg7wko40qgb7.us-east-1.rds.amazonaws.com"
+      DB_USER: "postgres"
+      DB_PASSWORD: "Smashmelee10!"
+      DB_NAME: "appdb"
+      DB_PORT: 5432
