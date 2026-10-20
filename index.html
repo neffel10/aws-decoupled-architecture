@@ -1,50 +1,211 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="h-full bg-slate-950 text-slate-100">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Arquitectura Desacoplada AWS v2.0</title>
+  <title>Cloud Architecture & CI/CD Pipeline | AWS Showcase</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col items-center justify-center p-6">
-  <div class="max-w-xl w-full bg-slate-800 rounded-2xl shadow-xl border border-slate-700 p-8 space-y-6">
-    <div class="space-y-2 text-center">
-      <span class="inline-block px-3 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-full text-xs font-semibold tracking-wider uppercase">
-        S3 + CloudFront + EC2 + RDS PostgreSQL
-      </span>
-      <h1 class="text-3xl font-extrabold tracking-tight text-white">Arquitectura Cloud AWS</h1>
-      <p class="text-slate-400 text-sm">Frontend estático desacoplado consumiendo API contenerizada con Docker detrás de Nginx.</p>
-    </div>
+<body class="min-h-full font-sans antialiased flex flex-col justify-between selection:bg-cyan-500 selection:text-white">
 
-    <div class="bg-slate-950/60 rounded-xl p-5 border border-slate-800 space-y-3">
-      <div class="flex items-center justify-between text-sm">
-        <span class="text-slate-400">Estado de la Base de Datos:</span>
-        <span id="db-status" class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-500/10 text-amber-400 border border-amber-500/20">
-          Consultando...
-        </span>
-      </div>
-      <div class="flex items-center justify-between text-sm">
-        <span class="text-slate-400">Mensaje de la API:</span>
-        <span id="api-message" class="text-slate-300 font-mono text-xs">Cargando...</span>
-      </div>
-      <div class="flex items-center justify-between text-sm">
-        <span class="text-slate-400">Hora del Servidor RDS:</span>
-        <span id="db-time" class="text-slate-300 font-mono text-xs">--</span>
-      </div>
-    </div>
-
-    <button id="btn-refresh" class="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white font-medium rounded-xl transition duration-200 shadow-lg shadow-indigo-600/30 text-sm">
-      Reconsultar API (/api/test)
-    </button>
+  <!-- Glow Background Effects -->
+  <div class="fixed inset-0 overflow-hidden pointer-events-none -z-10">
+    <div class="absolute -top-40 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-gradient-to-tr from-cyan-600/20 via-indigo-600/20 to-purple-600/20 blur-[130px] rounded-full"></div>
+    <div class="absolute bottom-0 right-10 w-[450px] h-[300px] bg-blue-600/10 blur-[140px] rounded-full"></div>
   </div>
 
+  <!-- Header -->
+  <header class="border-b border-slate-800/80 bg-slate-900/40 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="h-8 w-8 rounded-lg bg-gradient-to-br from-cyan-400 to-indigo-600 flex items-center justify-center font-bold text-slate-950 text-sm shadow-md shadow-cyan-500/20">
+          AWS
+        </div>
+        <div class="flex flex-col">
+          <span class="text-sm font-bold tracking-tight text-white leading-tight">Decoupled Architecture</span>
+          <span class="text-[10px] font-mono text-cyan-400 uppercase tracking-wider">Production Showcase</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+          <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          Pipeline CI/CD Activo
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-6 py-10 w-full space-y-10">
+    
+    <!-- Hero / Title -->
+    <div class="text-center max-w-3xl mx-auto space-y-3">
+      <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight text-white leading-tight">
+        Arquitectura Cloud Desacoplada en <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-300 to-indigo-400">AWS</span>
+      </h1>
+      <p class="text-slate-400 text-sm md:text-base leading-relaxed">
+        Infraestructura empresarial con distribución global estática, backend contenerizado con Docker en EC2 y persistencia en Amazon RDS PostgreSQL, automatizada mediante GitHub Actions.
+      </p>
+    </div>
+
+    <!-- Architecture Visual Flow Cards -->
+    <section class="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <!-- Node 1: S3 -->
+      <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-5 relative overflow-hidden group hover:border-cyan-500/50 transition">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-mono font-semibold text-cyan-400 uppercase tracking-wider">Frontend Edge</span>
+          <span class="text-[11px] px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">Serverless</span>
+        </div>
+        <h3 class="text-base font-bold text-white mb-1">S3 + CloudFront</h3>
+        <p class="text-xs text-slate-400 leading-relaxed">Alojamiento de estáticos distribuido por 450+ PoPs perimetrales con SSL e invalidación de caché.</p>
+      </div>
+
+      <!-- Node 2: Route / Proxy -->
+      <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-5 relative overflow-hidden group hover:border-indigo-500/50 transition">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-mono font-semibold text-indigo-400 uppercase tracking-wider">Routing</span>
+          <span class="text-[11px] px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">Reverse Proxy</span>
+        </div>
+        <h3 class="text-base font-bold text-white mb-1">Nginx Gateway</h3>
+        <p class="text-xs text-slate-400 leading-relaxed">Desvía el patrón <code class="font-mono text-indigo-300">/api/*</code> hacia el entorno contenerizado en puerto 3000.</p>
+      </div>
+
+      <!-- Node 3: Docker EC2 -->
+      <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-5 relative overflow-hidden group hover:border-sky-500/50 transition">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-mono font-semibold text-sky-400 uppercase tracking-wider">Backend API</span>
+          <span class="text-[11px] px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">Docker</span>
+        </div>
+        <h3 class="text-base font-bold text-white mb-1">EC2 Container</h3>
+        <p class="text-xs text-slate-400 leading-relaxed">Servicio Node.js/Express contenerizado con reinicios automáticos y despliegue SSH.</p>
+      </div>
+
+      <!-- Node 4: RDS Postgres -->
+      <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-5 relative overflow-hidden group hover:border-emerald-500/50 transition">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-mono font-semibold text-emerald-400 uppercase tracking-wider">Database</span>
+          <span class="text-[11px] px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">Managed</span>
+        </div>
+        <h3 class="text-base font-bold text-white mb-1">RDS PostgreSQL</h3>
+        <p class="text-xs text-slate-400 leading-relaxed">Base de datos relacional protegida en subnet privada sin exposición pública directa.</p>
+      </div>
+    </section>
+
+    <!-- Interactive Live Demo Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      
+      <!-- Left Column: Status & Diagnostic -->
+      <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between space-y-6">
+        <div>
+          <h2 class="text-lg font-bold text-white mb-1 flex items-center gap-2">
+            Diagnóstico de Conectividad
+          </h2>
+          <p class="text-xs text-slate-400 mb-5">Prueba en tiempo real de consulta directa al clúster PostgreSQL.</p>
+          
+          <div class="space-y-3 font-mono text-xs">
+            <div class="bg-slate-950/70 p-3 rounded-lg border border-slate-800/80 flex items-center justify-between">
+              <span class="text-slate-400">Estado DB:</span>
+              <span id="db-status" class="px-2 py-0.5 rounded text-[11px] font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                Consultando...
+              </span>
+            </div>
+            <div class="bg-slate-950/70 p-3 rounded-lg border border-slate-800/80">
+              <span class="text-slate-400 block mb-1">Mensaje API:</span>
+              <span id="api-message" class="text-slate-200">Cargando...</span>
+            </div>
+            <div class="bg-slate-950/70 p-3 rounded-lg border border-slate-800/80">
+              <span class="text-slate-400 block mb-1">Timestamp RDS:</span>
+              <span id="db-time" class="text-cyan-400">--</span>
+            </div>
+          </div>
+        </div>
+
+        <button id="btn-refresh" class="w-full py-2.5 px-4 bg-slate-800 hover:bg-slate-700 active:bg-slate-800 text-white font-medium rounded-xl border border-slate-700 transition text-xs flex items-center justify-center gap-2 shadow-sm">
+          <span>Reconsultar Conexión</span>
+        </button>
+      </div>
+
+      <!-- Right Column: Live Guestbook / Visits DB -->
+      <div class="lg:col-span-2 bg-slate-900/80 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between space-y-6">
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <h2 class="text-lg font-bold text-white flex items-center gap-2">
+              Registro de Visitas en Vivo
+            </h2>
+            <span class="text-xs font-mono text-slate-400" id="total-visitas">0 registros</span>
+          </div>
+          <p class="text-xs text-slate-400 mb-5">
+            Escribe un nombre o nota para realizar un <span class="text-indigo-400 font-mono">POST</span> a la base de datos PostgreSQL a través del proxy inverso de la EC2.
+          </p>
+
+          <!-- Input Form -->
+          <form id="form-visita" class="flex flex-col sm:flex-row gap-2 mb-6">
+            <input 
+              type="text" 
+              id="input-nombre" 
+              placeholder="Tu nombre o empresa (ej. Reclutador Tech)" 
+              required
+              class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition"
+            />
+            <button 
+              type="submit" 
+              id="btn-guardar"
+              class="py-2.5 px-5 bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-semibold rounded-xl text-xs transition shadow-md shadow-indigo-600/20 whitespace-nowrap"
+            >
+              Registrar en RDS
+            </button>
+          </form>
+
+          <!-- List of records -->
+          <div class="bg-slate-950/60 rounded-xl border border-slate-800/80 overflow-hidden">
+            <div class="max-h-56 overflow-y-auto divide-y divide-slate-800/60" id="lista-visitas">
+              <div class="p-4 text-center text-xs text-slate-500 font-mono">
+                Cargando registros desde PostgreSQL...
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-[11px] font-mono text-slate-500 flex items-center justify-between pt-2 border-t border-slate-800/60">
+          <span>Target: <span class="text-slate-400">/api/visitas</span></span>
+          <span>Protocol: <span class="text-emerald-400">HTTPS + REST</span></span>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800/80 py-6 text-center text-xs text-slate-500">
+    <div class="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <span>Desplegado mediante Pipeline CI/CD en GitHub Actions</span>
+      <span class="font-mono text-slate-400">CloudFront $\rightarrow$ S3 $\rightarrow$ EC2 (Docker) $\rightarrow$ RDS PostgreSQL</span>
+    </div>
+  </footer>
+
   <script>
+    // 1. Diagnóstico de Conexión
     async function checkApi() {
       const statusEl = document.getElementById('db-status');
       const messageEl = document.getElementById('api-message');
       const timeEl = document.getElementById('db-time');
 
-      statusEl.className = "px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-500/10 text-amber-400 border border-amber-500/20";
+      statusEl.className = "px-2 py-0.5 rounded text-[11px] font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20";
       statusEl.textContent = "Consultando...";
 
       try {
@@ -52,23 +213,95 @@
         const data = await res.json();
 
         if (res.ok) {
-          statusEl.className = "px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20";
-          statusEl.textContent = "Conectado a PostgreSQL";
+          statusEl.className = "px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20";
+          statusEl.textContent = "Conectado a RDS";
           messageEl.textContent = data.message || "OK";
-          timeEl.textContent = data.now || data.time || new Date().toLocaleTimeString();
+          timeEl.textContent = data.now || new Date().toISOString();
         } else {
-          throw new Error(data.error || "Respuesta con error");
+          throw new Error(data.error || "Error en la respuesta");
         }
       } catch (err) {
-        statusEl.className = "px-2.5 py-0.5 rounded-full text-xs font-medium bg-rose-500/10 text-rose-400 border border-rose-500/20";
+        statusEl.className = "px-2 py-0.5 rounded text-[11px] font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/20";
         statusEl.textContent = "Error de Conexión";
         messageEl.textContent = err.message;
         timeEl.textContent = "--";
       }
     }
 
+    // 2. Cargar Visitas de PostgreSQL
+    async function cargarVisitas() {
+      const listaEl = document.getElementById('lista-visitas');
+      const totalEl = document.getElementById('total-visitas');
+
+      try {
+        const res = await fetch('/api/visitas');
+        if (!res.ok) throw new Error("No se pudo obtener el historial");
+        
+        const data = await res.json();
+        const visitas = Array.isArray(data) ? data : (data.visitas || []);
+
+        totalEl.textContent = `${visitas.length} registros`;
+
+        if (visitas.length === 0) {
+          listaEl.innerHTML = `<div class="p-4 text-center text-xs text-slate-500 font-mono">No hay registros aún en PostgreSQL. ¡Sé el primero!</div>`;
+          return;
+        }
+
+        listaEl.innerHTML = visitas.map(v => `
+          <div class="px-4 py-3 flex items-center justify-between text-xs hover:bg-slate-900/50 transition">
+            <div class="flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+              <span class="font-medium text-slate-200">${v.nombre || v.usuario || 'Visitante'}</span>
+            </div>
+            <span class="font-mono text-[10px] text-slate-500">
+              ${v.fecha ? new Date(v.fecha).toLocaleString() : (v.created_at ? new Date(v.created_at).toLocaleString() : '')}
+            </span>
+          </div>
+        `).join('');
+
+      } catch (err) {
+        listaEl.innerHTML = `<div class="p-4 text-center text-xs text-rose-400 font-mono">Error al conectar con /api/visitas: ${err.message}</div>`;
+      }
+    }
+
+    // 3. Registrar Visita
+    document.getElementById('form-visita').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const input = document.getElementById('input-nombre');
+      const btn = document.getElementById('btn-guardar');
+      const nombre = input.value.trim();
+
+      if (!nombre) return;
+
+      btn.disabled = true;
+      btn.textContent = "Guardando...";
+
+      try {
+        const res = await fetch('/api/visitas', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ nombre: nombre })
+        });
+
+        if (res.ok) {
+          input.value = '';
+          await cargarVisitas();
+        } else {
+          alert('Hubo un error al registrar en la base de datos.');
+        }
+      } catch (err) {
+        alert('Error de conexión al enviar el registro.');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Registrar en RDS";
+      }
+    });
+
     document.getElementById('btn-refresh').addEventListener('click', checkApi);
+
+    // Inicializar llamadas al cargar
     checkApi();
+    cargarVisitas();
   </script>
 </body>
 </html>
