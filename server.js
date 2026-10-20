@@ -20,6 +20,19 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'API operativa' });
 });
 
+app.get('/api/test', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT NOW() as now;');
+    res.json({
+      message: 'Conexión exitosa con Amazon RDS PostgreSQL',
+      now: result.rows[0].now
+    });
+  } catch (err) {
+    console.error('Error al consultar PostgreSQL:', err);
+    res.status(500).json({ error: 'Error de conexión a la base de datos', details: err.message });
+  }
+});
+
 // Obtener visitas
 app.get('/api/visitas', async (req, res) => {
   try {
